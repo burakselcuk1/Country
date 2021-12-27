@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.countryapp3.R
+import com.example.countryapp3.databinding.ItemCountryBinding
 import com.example.countryapp3.model.Country
 import com.example.countryapp3.ui.FeedFragmentDirections
 import com.example.countryapp3.utils.downloadFromUrl
@@ -15,42 +17,34 @@ import kotlinx.android.synthetic.main.item_country.view.*
 
 
 class CountryAdapter(private val countryList: ArrayList<Country>) :
-    RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
+    RecyclerView.Adapter<CountryAdapter.CountryViewHolder>() {
 
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val name: TextView
-        val region: TextView
 
-        init {
-            // Define click listener for the ViewHolder's View.
-            name = view.findViewById(R.id.name)
-            region = view.findViewById(R.id.region)
-        }
+    class CountryViewHolder(var view: ItemCountryBinding) : RecyclerView.ViewHolder(view.root) {
 
     }
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryViewHolder {
         // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.item_country, viewGroup, false)
+       val inflater = LayoutInflater.from(parent.context)
 
+        val view = DataBindingUtil.inflate<ItemCountryBinding>(inflater,R.layout.item_country,parent,false)
 
-
-        return ViewHolder(view)
+        return CountryViewHolder(view)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CountryViewHolder, position: Int) {
 
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
+        holder.view.country = countryList[position]
 
 
+        /*
         viewHolder.name.text = countryList[position].countryName
         viewHolder.region.text = countryList[position].countryRegion
 
@@ -60,6 +54,8 @@ class CountryAdapter(private val countryList: ArrayList<Country>) :
             Navigation.findNavController(it).navigate(action)
         }
         viewHolder.itemView.imageView.downloadFromUrl(countryList[position].imageUrl, placeholderProgressBar(viewHolder.itemView.context))
+         */
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
